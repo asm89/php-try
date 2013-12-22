@@ -1,0 +1,30 @@
+{
+    "name": "phptry/phptry",
+    "description": "Try",
+    "keywords": ["try", "success", "failure", "monad"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander",
+            "email": "iam.asm89@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "require-dev": {
+        "phpoption/phpoption": "1.*"
+    },
+    "autoload": {
+        "psr-0": { "PhpTry\\": "src/" }
+    },
+    "suggest": {
+        "phpoption/phpoption": "If you want to turn your success/failure into an option."
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    }
+}
