@@ -57,7 +57,7 @@ success and failure cases.
 
 Gets the value from Success, or throws the original exception if it was a Failure.
 
-```
+```php
 echo $try->get();
 ```
 
@@ -76,7 +76,7 @@ echo $try->getOrCall(function() { return -1; });
 // or else return another Attempt
 echo $try->orElse(Attempt::call('divide', array(42, 21)));
 
-// or else return another attempt from a callable
+// or else return Another attempt from a callable
 echo $try->orElseCall('promptDivide')->get();
 ```
 
@@ -89,7 +89,7 @@ Failure otherwise. If the function passed to `flatMap` or `map` throws, the
 operation will result in a Failure.
 
 ```php
-// map with another attempt
+// map to Another attempt
 $try->flatMap(function($elem) {
     return Attempt::call('divide', array($elem, promptDivide()->get()));
 });
@@ -141,18 +141,17 @@ $try
 It is possible to execute the provided callable only when needed. This is
 especially useful when recovering with for example expensive alternatives.
 
-```
-$try
-    ->orElse(Attempt::lazily('someExpensiveComputationThatMightThrow'));
+```php
+$try->orElse(Attempt::lazily('someExpensiveComputationThatMightThrow'));
 ```
 
 #### Other options
 
-When you have [phpoption/phpoptions] installed, the Attempt can be converted to
+When you have [phpoption/phpoption] installed, the Attempt can be converted to
 an Option. In this mapping a Succes maps to Some and a Failure maps to a None
 value.
 
-```
+```php
 $try->toOption(); // Some(value) or None()
 ```
 
