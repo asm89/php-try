@@ -58,7 +58,7 @@ success and failure cases.
 Gets the value from Success, or throws the original exception if it was a Failure.
 
 ```php
-echo $try->get();
+$try->get();
 ```
 
 #### Falling back to a default value if Failure
@@ -67,17 +67,17 @@ Gets the value from Success, or get a provided alternative if the computation fa
 
 ```php
 // or a provided fallback value
-echo $try->getOrElse(-1);
+$try->getOrElse(-1);
 
 // or a value returned by the callable
 // note: if the provided callable throws, this exception will not be catched
-echo $try->getOrCall(function() { return -1; });
+$try->getOrCall(function() { return -1; });
 
 // or else return another Attempt
-echo $try->orElse(Attempt::call('divide', array(42, 21)));
+$try->orElse(Attempt::call('divide', array(42, 21)));
 
 // or else return Another attempt from a callable
-echo $try->orElseCall('promptDivide')->get();
+$try->orElseCall('promptDivide');
 ```
 
 #### Walking the happy path
