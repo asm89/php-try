@@ -1,6 +1,6 @@
 {
     "name": "phptry/phptry",
-    "description": "Try",
+    "description": "Try type for PHP",
     "keywords": ["try", "success", "failure", "monad"],
     "type": "library",
     "license": "MIT",
