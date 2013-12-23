@@ -14,6 +14,35 @@ operations, catching exceptions along the way.
 > Note: this implementation of the Try type is called Attempt, because "try" is
 > a reserved keyword in PHP.
 
+## Before / after
+
+Before, the `UserService` and `Serializer` code might throw exceptions, so we
+have an explicit try/catch:
+
+```php
+try {
+    $user = $userService->findBy($id);
+    $responseBody = $this->serializeUser($user);
+
+    return new Response($user);
+} catch (Exception $ex) {
+    return Response('error', 500);
+}
+```
+
+After, the `UserService` and `Serializer` now return a response of type `Try`
+meaning that the computation will either be a `Failure` or a `Success`. The
+combinators on the `Try` type are used to chain the following code in the case
+the previous operation was successful.
+
+```php
+return $userService->findBy($id)
+    ->flatMap(function($user) { return $this->serializeUser($user); }) // walk the happy path!
+    ->map(function($responseBody) { return new Response($responseBody); })
+    ->recover(function($ex) { return new Response('error', 500); })
+    ->get(); // returns the wrapped value
+```
+
 ## Installation
 
 Run:
