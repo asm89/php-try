@@ -3,6 +3,7 @@
 namespace PhpTry;
 
 use ArrayIterator;
+use EmptyIterator;
 use Exception;
 use IteratorAggregate;
 use UnexpectedValueException;
@@ -100,7 +101,7 @@ abstract class Attempt implements IteratorAggregate
         if ($this->isSuccess()) {
             return new ArrayIterator(array($this->get()));
         } else {
-            return new ArrayIterator(array());
+            return new EmptyIterator();
         }
     }
 
