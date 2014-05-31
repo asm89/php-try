@@ -212,4 +212,18 @@ abstract class SuccessfulAttemptTestCase extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(new \PhpOption\Some(42), $this->success->toOption());
     }
+
+    /**
+     * @test
+     */
+    public function it_calls_on_forAll()
+    {
+        $called = false;
+        $value  = null;
+
+        $this->success->forAll(function($v) use (&$called, &$value) { $called = true; $value = $v; });
+
+        $this->assertTrue($called);
+        $this->assertEquals(42, $value);
+    }
 }

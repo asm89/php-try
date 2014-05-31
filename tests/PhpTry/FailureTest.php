@@ -51,4 +51,12 @@ class FailureTest extends FailedAttemptTestCase
     {
         $this->assertSame($this->failure, $this->failure->onSuccess(function() {}));
     }
+
+    /**
+     * @test
+     */
+    public function it_returns_itself_forAll()
+    {
+        $this->assertSame($this->failure, $this->failure->forAll(function() {}));
+    }
 }

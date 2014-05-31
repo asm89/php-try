@@ -227,6 +227,18 @@ abstract class FailedAttemptTestCase extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(\PhpOption\None::create(), $this->failure->toOption());
     }
+
+    /**
+     * @test
+     */
+    public function it_does_not_call_on_forAll()
+    {
+        $called = false;
+
+        $this->failure->forAll(function() use (&$called) { $called = true; });
+
+        $this->assertFalse($called);
+    }
 }
 
 class TestException extends Exception {}

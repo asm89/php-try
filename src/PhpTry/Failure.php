@@ -76,6 +76,11 @@ class Failure extends Attempt
         return $this;
     }
 
+    public function forAll($callable)
+    {
+        return $this;
+    }
+
     public function toOption()
     {
         return \PhpOption\None::create();

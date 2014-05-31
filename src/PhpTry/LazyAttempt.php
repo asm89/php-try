@@ -106,4 +106,9 @@ class LazyAttempt extends Attempt
     {
         return $this->attempt()->toOption();
     }
+
+    public function forAll($callable)
+    {
+        return $this->attempt()->forAll($callable);
+    }
 }

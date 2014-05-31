@@ -12,7 +12,7 @@ use UnexpectedValueException;
  * The Try type represents a computation that may either result in an
  * exception, or return a successfully computed value.
  *
- * This implementation is based on scala's Try, but the class is called Attempt 
+ * This implementation is based on scala's Try, but the class is called Attempt
  * because "try" is a reserved keyword in PHP.
  *
  * @see https://github.com/scala/scala/blob/master/src/library/scala/util/Try.scala
@@ -191,6 +191,16 @@ abstract class Attempt implements IteratorAggregate
      * @return \PhpOption\Option
      */
     abstract public function toOption();
+
+    /**
+     * Callable called when this is a Success.
+     *
+     * Like `map`, but without caring about the return value of the callable.
+     * Useful for consuming the possible value of the Attempt.
+     *
+     * @return Attempt The current Attempt
+     */
+    abstract public function forAll($callable);
 
     /**
      * Constructs an Attempt by calling the passed callable.

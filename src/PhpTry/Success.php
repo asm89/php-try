@@ -91,4 +91,11 @@ class Success extends Attempt
     {
         return new \PhpOption\Some($this->value);
     }
+
+    public function forAll($callable)
+    {
+        call_user_func($callable, $this->value);
+
+        return $this;
+    }
 }
