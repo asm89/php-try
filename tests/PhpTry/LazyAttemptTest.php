@@ -2,7 +2,6 @@
 
 namespace PhpTry;
 
-use Exception;
 use PHPUnit_Framework_TestCase;
 
 class LazyAttemptTest extends PHPUnit_Framework_TestCase

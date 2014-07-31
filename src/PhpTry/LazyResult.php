@@ -3,11 +3,11 @@
 namespace PhpTry;
 
 /**
- * Attempt that is evaluated on first access.
+ * Result that is evaluated on first access.
  */
-class LazyAttempt extends Attempt
+class LazyResult extends Result
 {
-    private $attempt;
+    private $result;
     private $callable;
     private $arguments;
 
@@ -37,7 +37,7 @@ class LazyAttempt extends Attempt
         return $this->attempt()->getOrCall($callable);
     }
 
-    public function orElse(Attempt $try)
+    public function orElse(Result $try)
     {
         return $this->attempt()->orElse($try);
     }
@@ -82,24 +82,23 @@ class LazyAttempt extends Attempt
         return $this->attempt()->recover($callable);
     }
 
-    public function onSuccess($callable)
+    public function ifSuccess($callable)
     {
-        return $this->attempt()->onSuccess($callable);
-
+        return $this->attempt()->ifSuccess($callable);
     }
 
-    public function onFailure($callable)
+    public function ifFailure($callable)
     {
-        return $this->attempt()->onFailure($callable);
+        return $this->attempt()->ifFailure($callable);
     }
 
     private function attempt()
     {
-        if (null === $this->attempt) {
-            return $this->attempt = Attempt::call($this->callable, $this->arguments);
+        if (null === $this->result) {
+            return $this->result = Attempt::call($this->callable, $this->arguments);
         }
 
-        return $this->attempt;
+        return $this->result;
     }
 
     public function toOption()
