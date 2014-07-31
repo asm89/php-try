@@ -198,6 +198,8 @@ abstract class Attempt implements IteratorAggregate
      * Like `map`, but without caring about the return value of the callable.
      * Useful for consuming the possible value of the Attempt.
      *
+     * @param callable $callable Callable returning a value.
+     *
      * @return Attempt The current Attempt
      */
     abstract public function forAll($callable);
@@ -223,6 +225,9 @@ abstract class Attempt implements IteratorAggregate
      * Constructs a LazyAttempt by calling the passed callable.
      *
      * The callable will only be called if a method on the Attempt is called.
+     *
+     * @note Chaining should work as desired, but note that LazyAttempt methods do not return $this, but rather
+     *       return an internal Attempt object.
      *
      * @param callable $callable
      * @param array    $arguments Optional arguments for the callable.

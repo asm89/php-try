@@ -4,6 +4,9 @@ namespace PhpTry;
 
 /**
  * Attempt that is evaluated on first access.
+ *
+ * @note Chaining should work as desired, but note that LazyAttempt methods do not return $this, but rather
+ *       return an internal Attempt object.
  */
 class LazyAttempt extends Attempt
 {
