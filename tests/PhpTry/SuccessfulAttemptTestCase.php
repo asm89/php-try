@@ -75,7 +75,7 @@ abstract class SuccessfulAttemptTestCase extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider attemptValues
      */
-    public function it_returns_the_result_of_the_callable_on_flatMap(Attempt $attempt)
+    public function it_returns_the_result_of_the_callable_on_flatMap(Result $attempt)
     {
         $this->assertSame($attempt, $this->success->flatMap(function() use ($attempt) { return $attempt; }));
     }
@@ -184,11 +184,11 @@ abstract class SuccessfulAttemptTestCase extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_passes_its_value_to_the_onSuccess_callable()
+    public function it_passes_its_value_to_the_ifSuccess_callable()
     {
         $value = null;
 
-        $this->success->onSuccess(function($elem) use (&$value) { $value = $elem; });
+        $this->success->ifSuccess(function($elem) use (&$value) { $value = $elem; });
 
         $this->assertEquals($this->success->get(), $value);
     }
@@ -196,11 +196,11 @@ abstract class SuccessfulAttemptTestCase extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_passes_does_not_call_onFailure()
+    public function it_passes_does_not_call_ifFailure()
     {
         $called = false;
 
-        $this->success->onFailure(function() use (&$called) { $called = true; });
+        $this->success->ifFailure(function() use (&$called) { $called = true; });
 
         $this->assertFalse($called);
     }

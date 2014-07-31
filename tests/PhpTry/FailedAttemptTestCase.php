@@ -121,7 +121,7 @@ abstract class FailedAttemptTestCase extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider attemptValues
      */
-    public function it_returns_the_result_of_the_callable_on_recoverWith(Attempt $attempt)
+    public function it_returns_the_result_of_the_callable_on_recoverWith(Result $attempt)
     {
         $this->assertSame($attempt, $this->failure->recoverWith(function() use ($attempt) { return $attempt; }));
     }
@@ -199,11 +199,11 @@ abstract class FailedAttemptTestCase extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_passes_its_value_to_the_onFailure_callable()
+    public function it_passes_its_value_to_the_ifFailure_callable()
     {
         $value = null;
 
-        $this->failure->onFailure(function($elem) use (&$value) { $value = $elem; });
+        $this->failure->ifFailure(function($elem) use (&$value) { $value = $elem; });
 
         $this->assertEquals($this->exception, $value);
     }
@@ -211,11 +211,11 @@ abstract class FailedAttemptTestCase extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_passes_does_not_call_onSuccess()
+    public function it_passes_does_not_call_ifSuccess()
     {
         $called = false;
 
-        $this->failure->onSuccess(function() use (&$called) { $called = true; });
+        $this->failure->ifSuccess(function() use (&$called) { $called = true; });
 
         $this->assertFalse($called);
     }

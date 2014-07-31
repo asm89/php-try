@@ -3,10 +3,9 @@
 namespace PhpTry;
 
 use Exception;
-use RuntimeException;
 use UnexpectedValueException;
 
-class Success extends Attempt
+class Success extends Result
 {
     private $value;
 
@@ -35,8 +34,8 @@ class Success extends Attempt
         try {
             $value = call_user_func_array($callable, array($this->value));
 
-            if ( ! $value instanceof Attempt) {
-                return new Failure(new UnexpectedValueException('Return value of callable should be an Attempt.'));
+            if ( ! $value instanceof Result) {
+                return new Failure(new UnexpectedValueException('Return value of callable should be a Result.'));
             }
 
             return $value;
@@ -75,14 +74,14 @@ class Success extends Attempt
         return $this;
     }
 
-    public function onFailure($callable)
+    public function ifFailure($callable)
     {
         return $this;
     }
 
-    public function onSuccess($callable)
+    public function ifSuccess($callable)
     {
-        $value = call_user_func_array($callable, array($this->value));
+        call_user_func_array($callable, array($this->value));
 
         return $this;
     }

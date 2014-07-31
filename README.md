@@ -11,7 +11,7 @@ a value is now encoded in its return type.
 The type shows it usefulness with it's ability to create a "pipeline"
 operations, catching exceptions along the way.
 
-> Note: this implementation of the Try type is called Attempt, because "try" is
+> Note: this implementation of the Try type is called Result, because "try" is
 > a reserved keyword in PHP.
 
 ## Before / after
@@ -30,9 +30,9 @@ try {
 }
 ```
 
-After, the `UserService` and `Serializer` now return a response of type `Try`
+After, the `UserService` and `Serializer` now return a response of type `Result`
 meaning that the computation will either be a `Failure` or a `Success`. The
-combinators on the `Try` type are used to chain the following code in the case
+combinators on the `Result` type are used to chain the following code in the case
 the previous operation was successful.
 
 ```php
@@ -57,17 +57,23 @@ or add it to your `composer.json` file.
 > Note: most of the example code below can be tried out with the
 > `user-input.php` example from the `examples/` directory.
 
-### Constructing an Attempt
+### Constructing an Result
 
-Turn any callable in an `Attempt` using the `Attempt::call()` construct it.
+Build a `Result` using the `Attempt::call()` factory, which invokes the callable immediately and handles the outcome,
+either returning a `Success` containing the returned value, or a `Failure` containing the thrown exception.
 
 ```php
-\PhpTry\Attempt::call('callableThatMightThrow', array('argument1', 'argument2'));
+$result = \PhpTry\Attempt::call('callableThatMightThrow', array('argument1', 'argument2'));
 ```
 
 Or use `Success` and `Failure` directly in your API instead of throwing exceptions:
 
 ```php
+/**
+ * @param mixed $dividend
+ * @param mixed $divisor
+ * @return \PhpTry\Result
+ */
 function divide($dividend, $divisor) {
     if ($divisor === 0) {
         return new \PhpTry\Failure(new InvalidArgumentException('Divisor cannot be 0.'));
@@ -77,9 +83,9 @@ function divide($dividend, $divisor) {
 }
 ```
 
-### Using combinators on an Attempt
+### Using combinators on a Result
 
-Now that we have the `Attempt` object we can use it's combinators to handle the
+Now that we have the `Result` object we can use it's combinators to handle the
 success and failure cases.
 
 #### Getting the value
@@ -87,7 +93,7 @@ success and failure cases.
 Gets the value from Success, or throws the original exception if it was a Failure.
 
 ```php
-$try->get();
+$result->get();
 ```
 
 #### Falling back to a default value if Failure
@@ -96,17 +102,17 @@ Gets the value from Success, or get a provided alternative if the computation fa
 
 ```php
 // or a provided fallback value
-$try->getOrElse(-1);
+$result->getOrElse(-1);
 
 // or a value returned by the callable
 // note: if the provided callable throws, this exception will not be catched
-$try->getOrCall(function() { return -1; });
+$result->getOrCall(function() { return -1; });
 
-// or else return another Attempt
-$try->orElse(Attempt::call('divide', array(42, 21)));
+// or else return another Result
+$result->orElse(Attempt::call('divide', array(42, 21)));
 
 // or else return Another attempt from a callable
-$try->orElseCall('promptDivide');
+$result->orElseCall('promptDivide');
 ```
 
 #### Walking the happy path
@@ -119,19 +125,19 @@ operation will result in a Failure.
 
 ```php
 // map to Another attempt
-$try->flatMap(function($elem) {
+$result->flatMap(function($elem) {
     return Attempt::call('divide', array($elem, promptDivide()->get()));
 });
 
 // map the success value to another value
-$try->map(function($elem) { return $elem * 2; });
+$result->map(function($elem) { return $elem * 2; });
 
 // Success, if the predicate holds for the Success value, Failure otherwise
-$try->filter(function($elem) { return $elem === 42; })
+$result->filter(function($elem) { return $elem === 42; })
 
 // only foreachable if success
-foreach ($try as $result) {
-    echo $result;
+foreach ($result as $value) {
+    echo $value;
 }
 ```
 
@@ -143,10 +149,10 @@ When we do care about the Failure path we might want to try and fix things. The
 
 ```php
 // recover with with a value returned by a callable
-$try->recover(function($ex) { if ($ex instanceof RuntimeException) { return 21; } throw $ex; })
+$result->recover(function($ex) { if ($ex instanceof RuntimeException) { return 21; } throw $ex; })
 
 // recover with with an attempt returned by a callable
-$try->recoverWith(function() { return promptDivide(); })
+$result->recoverWith(function() { return promptDivide(); })
 ```
 
 The `recover` and `recoverWith` combinators can be useful when calling for
@@ -155,13 +161,13 @@ calling the service again or calling an alternative service.
 
 #### Don't call us, we'll call you
 
-The Try type can also call provided callables on a successful or failed computation:
+The `Result` type can also call provided callables on a successful or failed computation:
 
 ```php
-// on* handlers
-$try
-    ->onSuccess(function($elem) { echo "Result of a / b * c is: $elem\n"; })
-    ->onFailure(function($elem) { echo "Something went wrong: " . $elem->getMessage() . "\n"; promptDivide(); })
+// if* handlers
+$result
+    ->ifSuccess(function($elem) { echo "Result of a / b * c is: $elem\n"; })
+    ->ifFailure(function($elem) { echo "Something went wrong: " . $elem->getMessage() . "\n"; promptDivide(); })
 ;
 ```
 
@@ -171,17 +177,17 @@ It is possible to execute the provided callable only when needed. This is
 especially useful when recovering with for example expensive alternatives.
 
 ```php
-$try->orElse(Attempt::lazily('someExpensiveComputationThatMightThrow'));
+$result->orElse(Attempt::lazily('someExpensiveComputationThatMightThrow'));
 ```
 
 #### Other options
 
-When you have [phpoption/phpoption] installed, the Attempt can be converted to
+When you have [phpoption/phpoption] installed, the Result can be converted to
 an Option. In this mapping a Succes maps to Some and a Failure maps to a None
 value.
 
 ```php
-$try->toOption(); // Some(value) or None()
+$result->toOption(); // Some(value) or None()
 ```
 
 [phpoption/phpoption]: https://github.com/schmittjoh/php-option

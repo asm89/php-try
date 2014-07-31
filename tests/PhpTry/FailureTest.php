@@ -39,17 +39,17 @@ class FailureTest extends FailedAttemptTestCase
     /**
      * @test
      */
-    public function it_returns_itself_onFailure()
+    public function it_returns_itself_ifFailure()
     {
-        $this->assertSame($this->failure, $this->failure->onFailure(function() {}));
+        $this->assertSame($this->failure, $this->failure->ifFailure(function() {}));
     }
 
     /**
      * @test
      */
-    public function it_returns_itself_onSuccess()
+    public function it_returns_itself_ifSuccess()
     {
-        $this->assertSame($this->failure, $this->failure->onSuccess(function() {}));
+        $this->assertSame($this->failure, $this->failure->ifSuccess(function() {}));
     }
 
     /**

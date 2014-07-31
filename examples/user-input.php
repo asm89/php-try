@@ -1,6 +1,6 @@
 <?php
 
-use PhpTry\Attempt;
+use PhpTry\Result;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
