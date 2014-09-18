@@ -26,7 +26,7 @@ try {
 
     return new Response($user);
 } catch (Exception $ex) {
-    return Response('error', 500);
+    return new Response('error', 500);
 }
 ```
 
